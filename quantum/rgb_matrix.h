@@ -1,5 +1,6 @@
 /* Copyright 2017 Jason Williams
  * Copyright 2017 Jack Humbert
+ * Copyright 2018 Yiancar
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +22,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "color.h"
-#include "is31fl3731.h"
 #include "quantum.h"
+
+#ifdef IS31FL3731
+    #include "is31fl3731.h"
+#elif defined (IS31FL3733)
+    #include "is31fl3733.h"
+#endif
 
 typedef struct Point {
 	uint8_t x;
@@ -75,6 +81,7 @@ enum rgb_matrix_effects {
     RGB_MATRIX_RAINBOW_PINWHEELS,
     RGB_MATRIX_RAINBOW_MOVING_CHEVRON,
     RGB_MATRIX_JELLYBEAN_RAINDROPS,
+    RGB_MATRIX_DIGITAL_RAIN,
 #ifdef RGB_MATRIX_KEYPRESSES
     RGB_MATRIX_SOLID_REACTIVE,
     RGB_MATRIX_SPLASH,
@@ -95,7 +102,8 @@ void rgb_matrix_indicators_user(void);
 
 void rgb_matrix_single_LED_test(void);
 
-void rgb_matrix_init_drivers(void);
+void rgb_matrix_init(void);
+void rgb_matrix_setup_drivers(void);
 
 void rgb_matrix_set_suspend_state(bool state);
 void rgb_matrix_set_indicator_state(uint8_t state);
