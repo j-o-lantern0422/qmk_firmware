@@ -63,11 +63,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * ,----------------------------------------------------------------------------------------------------------------------.
    */
   [_LOWER] = LAYOUT(
-    KC_F11,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_LCBR,                        KC_RCBR, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F12,  \
-    KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_UNDS,                        KC_PLUS, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, \
-    KC_TAB,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_DEL ,                        KC_BSPC, KC_H,    KC_J,    KC_K,    KC_L,    KC_COLN, KC_DQT , \
-    KC_LSFT, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_SPC ,                        KC_ENT , KC_N,    KC_M,    KC_LT,   KC_GT,   KC_QUES, KC_RSFT, \
-    KC_LGUI, KC_LGUI, KC_LALT, EISU,             LOWER,   KC_SPC ,_______,        _______,KC_ENT , RAISE,            KC_HOME, KC_PGDN, KC_PGUP, KC_END   \
+    _______,  _______,   _______,   _______,   _______,   _______,   _______,                        _______, _______,   _______,   _______,   _______,   _______,  _______,  \
+    _______, _______, _______,   _______, _______,  _______, _______,                        _______, _______, _______, _______, _______, _______, _______, \
+    _______,  _______,    _______,    _______,    _______,    _______,    _______,                        _______, _______,    _______,    _______,    _______,    _______, _______, \
+    _______, _______,    _______,    _______,    _______,    _______,    _______,                        _______, _______,    _______,    _______,   _______,   _______, _______, \
+    _______, _______, _______, _______,             _______,   _______ ,_______,        _______,KC_LCTL, _______,            _______, _______, _______, _______   \
   ),
 
   /* Raise
@@ -106,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    */
   [_ADJUST] = LAYOUT(
     _______, _______, _______, _______, _______, _______,_______,                       _______, _______,  KC_EQL, _______, _______, _______, _______, \
-    _______, _______  ,KC_UP, _______, _______, RGB_HUI,_______,                       _______, RGB_SAD,   KC_7, KC_8, KC_9, _______, _______, \
+    _______, _______  ,KC_UP, _______, _______, RGB_HUI,_LOWER,                       _______, RGB_SAD,   KC_7, KC_8, KC_9, _______, _______, \
     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______ , BL_DEC ,_______,                       _______, _______, KC_4, KC_5, KC_6, _______, _______, \
     _______, _______, _______, _______, _______, _______,_______,                       _______, _______,  KC_1, KC_2, KC_3, _______, _______, \
     _______, _______, _______, _______,          _______,_______,_______,       _______,_______, _______,        KC_0, JP_DOT, _______, _______  \
@@ -120,6 +120,19 @@ float tone_qwerty[][2]     = SONG(QWERTY_SOUND);
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
   default_layer_set(default_layer);
+}
+
+void mod_tap_action(keyrecord_t *record, uint8_t mod, void (*cb)(void) ) {
+  if (record->event.pressed) {
+    add_mods(MOD_BIT(mod));
+  } else {
+    if (is_tap(record)) {
+      del_mods(MOD_BIT(mod));
+      cb();
+    } else {
+      unregister_code(mod);
+    }
+  }
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
