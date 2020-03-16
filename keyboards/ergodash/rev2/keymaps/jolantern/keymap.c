@@ -122,19 +122,6 @@ void persistent_default_layer_set(uint16_t default_layer) {
   default_layer_set(default_layer);
 }
 
-void mod_tap_action(keyrecord_t *record, uint8_t mod, void (*cb)(void) ) {
-  if (record->event.pressed) {
-    add_mods(MOD_BIT(mod));
-  } else {
-    if (is_tap(record)) {
-      del_mods(MOD_BIT(mod));
-      cb();
-    } else {
-      unregister_code(mod);
-    }
-  }
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case QWERTY:
@@ -170,14 +157,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         layer_off(_ADJUST);
       }
-      return false;
-      break;
-    case EN:
-      mod_tap_action(record, KC_MHEN, EISU);
-      return false;
-      break;
-    case JA:
-      mod_tap_action(record, KC_HENK, KANA);
       return false;
       break;
     case EISU:
